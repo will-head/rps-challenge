@@ -3,7 +3,7 @@ class Player
   attr_reader :computer
   alias :computer? :computer
 
-  def initialize(name, computer=false)
+  def initialize(name, computer = false)
     @name = name
     @computer = computer
   end

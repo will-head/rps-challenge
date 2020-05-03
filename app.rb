@@ -2,7 +2,7 @@ require 'sinatra/base'
 require_relative 'lib/player'
 
 # Global for testing, refactor to use group :test from Gemfile?
-# $verbose = true
+$verbose = true
 # NUMBER_OF_PLAYERS = 1
 
 class RockPaperScissorsWebGame < Sinatra::Base
@@ -27,7 +27,7 @@ class RockPaperScissorsWebGame < Sinatra::Base
       session[:players].push(Player.new(params[:player_1_name]))
     else
       session[:players].push(Player.new(params[:player_0_name]))
-      session[:players].push(Player.new("Computer"))
+      session[:players].push(Player.new("Computer", true))
     end
 
     redirect to('/play')
@@ -43,26 +43,49 @@ class RockPaperScissorsWebGame < Sinatra::Base
     verbose_output(request.url) if $verbose
 
     @current_player = session[:players][0]
-
-    p @current_player.move
+    puts "Current player:"; p @current_player if $verbose
 
     if @current_player.move
       @current_player = session[:players][1]
     end
+
 
     erb :play
   end
 
   post '/move' do
     verbose_output(request.url) if $verbose
+    puts "[:players][0].move:"; p session[:players][0].move if $verbose
+    puts "[:players][1].move:"; p session[:players][1].move if $verbose
 
-    unless session[:players][0].move
-      session[:players][0].move = params[:commit]
-    end
+    # TODO: Restore sinlge player functionality
+
+    # @current_player.move = params[:commit]
+
+    puts "[:players][0].move:"; p session[:players][0].move if $verbose
+    puts "[:players][1].move:"; p session[:players][1].move if $verbose
+
+    redirect to('play')
+
+
+
+    # unless session[:players][0].move
+    #   session[:players][0].move = params[:commit]
+    # else
+    #   session[:players][1].move = params[:commit]
+    # end
     
-    session[:players][1].move = ['🗿', '📄', '✂'].sample
+    # if session[:players][1].computer?
+    #   session[:players][1].move = ['🗿', '📄', '✂'].sample
+    # else
+    #   redirect to('play')
+    # end
 
-    redirect to('result')
+    # if session[:players][0].move && session[:players][1].move
+    #   redirect to('result')
+    # end
+
+    # redirect to('result')
   end
 
   get '/result' do

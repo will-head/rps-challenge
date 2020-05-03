@@ -39,6 +39,17 @@ feature 'result' do
     expect(page).to have_content "#{RSPEC_TEST_COMPUTER_NAME} move: ✂"
   end
 
+  scenario 'shows player_0 🗿 move and player_1 📄 move' do
+    sign_in_and_play_humans
+    expect(page).to have_content "What's your move #{RSPEC_TEST_PLAYER_0_NAME}:"
+    click_button '🗿'
+    expect(page).to have_content "What's your move #{RSPEC_TEST_PLAYER_1_NAME}:"
+    click_button '📄'
+    expect(page).to have_content "#{RSPEC_TEST_PLAYER_0_NAME} move: 🗿"
+    expect(page).to have_content "#{RSPEC_TEST_PLAYER_1_NAME} move: 📄"
+    # expect(page).to have_content "#{RSPEC_TEST_PLAYER_0_NAME} move: 🗿"
+  end
+
   scenario 'has same players link' do
     sign_in_and_play_computer
     click_button '🗿'
@@ -50,5 +61,5 @@ feature 'result' do
     click_button '🗿'
     expect(page).to have_link('New Players', :href => '/')
   end
-  
+
 end
