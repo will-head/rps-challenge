@@ -2,7 +2,7 @@ require 'sinatra/base'
 require_relative 'lib/player'
 
 # Global for testing, refactor to use group :test from Gemfile?
-# $verbose = true
+$verbose = true
 # NUMBER_OF_PLAYERS = 1
 
 class RockPaperScissorsWebGame < Sinatra::Base
@@ -23,13 +23,18 @@ class RockPaperScissorsWebGame < Sinatra::Base
     session[:players].push(Player.new(params[:player_0_name]))
 
     if params[:commit] == "Play Human"
-      # TODO: add add_player flow
-      session[:players].push(Player.new("Computer"))
+      redirect to('/add_player')
     else
       session[:players].push(Player.new("Computer"))
     end
 
     redirect to('/play')
+  end
+
+  get '/add_player' do
+    verbose_output(request.url) if $verbose
+
+    erb :add_player
   end
   
   get '/play' do

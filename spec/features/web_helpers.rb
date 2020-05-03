@@ -21,4 +21,6 @@ end
 def sign_in_and_play_human
   sign_in
   click_button 'Play Human'
+  fill_in :player_1_name, with: RSPEC_TEST_PLAYER_1_NAME
+  click_button 'Play'
 end
