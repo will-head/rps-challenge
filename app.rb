@@ -20,11 +20,13 @@ class RockPaperScissorsWebGame < Sinatra::Base
   post '/names' do
     verbose_output(request.url) if $verbose
 
-    session[:players].push(Player.new(params[:player_0_name]))
-
     if params[:commit] == "Play Human"
+      session[:players].push(Player.new(params[:player_0_name]))
       redirect to('/add_player')
+    elsif params[:commit] == "Play"
+      session[:players].push(Player.new(params[:player_1_name]))
     else
+      session[:players].push(Player.new(params[:player_0_name]))
       session[:players].push(Player.new("Computer"))
     end
 
@@ -39,14 +41,25 @@ class RockPaperScissorsWebGame < Sinatra::Base
   
   get '/play' do
     verbose_output(request.url) if $verbose
- 
+
+    @current_player = session[:players][0]
+
+    p @current_player.move
+
+    if @current_player.move
+      @current_player = session[:players][1]
+    end
+
     erb :play
   end
 
   post '/move' do
     verbose_output(request.url) if $verbose
- 
-    session[:players][0].move = params[:commit]
+
+    unless session[:players][0].move
+      session[:players][0].move = params[:commit]
+    end
+    
     session[:players][1].move = ['🗿', '📄', '✂'].sample
 
     redirect to('result')
